@@ -55,7 +55,3 @@ ci: lint phpcs phpstan rector-dry-run phpunit
 .PHONY: pre-ci preci
 preci: pre-ci
 pre-ci: build phpcbf rector ci
-
-.PHONY: phpbench
-phpbench: build
-	@$(app) vendor/bin/phpbench run --report=aggregate

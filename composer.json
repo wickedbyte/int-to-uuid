@@ -33,7 +33,6 @@
     },
     "require-dev": {
         "php-parallel-lint/php-parallel-lint": "^1.4",
-        "phpbench/phpbench": "^1.4.3",
         "phpstan/extension-installer": "^1.4.3",
         "phpstan/phpstan": "^2.1.33",
         "phpstan/phpstan-phpunit": "^2.0.10",
@@ -49,7 +48,6 @@
       "ci:phpunit": "@php vendor/bin/phpunit --no-interaction --no-progress",
       "ci:rector-dry-run": "@rector-dry-run --no-progress-bar --no-ansi",
       "lint": "@php vendor/bin/parallel-lint -j $(nproc --ignore=2) --show-deprecated --exclude vendor --exclude build .",
-      "phpbench": "@php vendor/bin/phpbench run --report=aggregate",
       "phpcbf": "@php vendor/bin/phpcbf --parallel=$(nproc --ignore=2) --report=full",
       "phpcs": "@php vendor/bin/phpcs --parallel=$(nproc --ignore=2) --report=full",
       "phpstan": "@php vendor/bin/phpstan analyze --memory-limit=-1 --verbose",
