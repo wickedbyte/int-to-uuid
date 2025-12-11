@@ -1,0 +1,92 @@
+name: "Install PHP Dependencies"
+description: "Install PHP Dependencies"
+inputs:
+  php-version:
+    description: "PHP Version"
+    required: false
+    default: "8.5"
+  display:
+    description: "Vendor Script Name for Display, e.g. PHPUnit"
+    required: false
+  cache:
+    description: "Vendor Script Cache Path, e.g. build/phpstan"
+    required: false
+  command:
+    description: "Vendor Script Command, e.g. php vendor/bin/phpstan analyse --no-progress"
+    required: false
+  composer_command:
+    description: "If command is provided, this is run after composer install and before the (optional) command."
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - name: Set Up Build Cache for Composer
+      uses: actions/cache@v4
+      with:
+        path: build/composer
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}-${{ hashFiles('**/composer.lock') }}-${{ github.run_id }}
+        restore-keys: |
+          ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}-${{ hashFiles('**/composer.lock') }}
+          ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          ${{ runner.os }}-composer
+
+    - name: Set Up Vendor Cache for Composer
+      uses: actions/cache@v4
+      with:
+        path: vendor
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}-${{ hashFiles('**/composer.lock') }}-${{ github.run_id }}
+        restore-keys: |
+          ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}-${{ hashFiles('**/composer.lock') }}
+          ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          ${{ runner.os }}-composer
+
+    - if: ${{ inputs.cache != '' }}
+      name: Set Up Cache for ${{ inputs.name }}
+      uses: actions/cache@v4
+      with:
+        path: ${{ inputs.cache }}
+        key: ${{ runner.os }}-${{ inputs.php-version }}-${{ inputs.cache }}-${{ hashFiles('**/composer.lock') }}
+        restore-keys: ${{ runner.os }}-${{ inputs.php-version }}-${{ inputs.cache }}
+
+    - name: Install Composer Dependencies
+      shell: bash
+      run: |
+        mkdir -p build/composer
+        docker run --rm \
+          --user="$(id -u):$(id -g)" \
+          --pull=missing \
+          --env COMPOSER_CACHE_DIR="build/composer" \
+          --volume ${{ github.workspace }}:/app \
+          composer:latest \
+          composer install --no-interaction --no-progress --prefer-dist --optimize-autoloader
+
+    - name: Run Composer Command
+      if: ${{ inputs.composer_command != '' }}
+      shell: bash
+      run: |
+        mkdir -p build/composer
+        docker run --rm \
+          --user="$(id -u):$(id -g)" \
+          --pull=missing \
+          --env COMPOSER_CACHE_DIR="build/composer" \
+          --volume ${{ github.workspace }}:/app \
+          --workdir /app \
+          composer:latest \
+          ${{ inputs.composer_command }}
+
+    - if: ${{ inputs.cache != '' }}
+      name: Make Command Cache Directory
+      shell: bash
+      run: mkdir -p ${{ inputs.cache }}
+
+    - if: ${{ inputs.command != '' }}
+      name: Run ${{ inputs.display }}
+      shell: bash
+      run: |
+        docker run --rm \
+        --user="$(id -u):$(id -g)" \
+        --pull=missing \
+        --volume ${{ github.workspace }}:/app \
+        --workdir /app \
+          php:${{ inputs.php-version }}-cli-alpine \
+          ${{ inputs.command }}

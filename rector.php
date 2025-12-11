@@ -7,46 +7,36 @@ use Rector\CodeQuality\Rector\Expression\InlineIfToExplicitIfRector;
 use Rector\CodeQuality\Rector\Identical\FlipTypeControlToUseExclusiveTypeRector;
 use Rector\CodeQuality\Rector\If_\ExplicitBoolCompareRector;
 use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
-use Rector\CodingStyle\Rector\ClassMethod\NewlineBeforeNewAssignSetRector;
 use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
 use Rector\Config\RectorConfig;
 use Rector\Php74\Rector\Closure\ClosureToArrowFunctionRector;
-use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitSelfCallRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
+use Rector\ValueObject\PhpVersion;
 
 return RectorConfig::configure()
+    ->withPhpVersion(PhpVersion::PHP_82)
     ->withImportNames(importShortClasses: false)
     ->withCache(__DIR__ . '/build/rector')
     ->withRootFiles()
-    ->withPaths([
-        __DIR__ . '/src',
-        __DIR__ . '/tests',
-    ])
-    ->withPhpSets(php84: true)
-    ->withAttributesSets(all: true)
+    ->withPaths([__DIR__ . '/src', __DIR__ . '/tests'])
+    ->withPhpSets(php85: true)
     ->withPreparedSets(
         deadCode: true,
         codeQuality: true,
         codingStyle: true,
         typeDeclarations: true,
         privatization: true,
-        naming: false,
         instanceOf: true,
         earlyReturn: true,
-        strictBooleans: false,
-        carbon: false,
         rectorPreset: true,
         phpunitCodeQuality: true,
-    )->withRules([
-        PreferPHPUnitSelfCallRector::class,
-    ])->withSkip([
+    )->withSkip([
+        CatchExceptionNameMatchingTypeRector::class,
         ClosureToArrowFunctionRector::class,
+        ExplicitBoolCompareRector::class,
         FlipTypeControlToUseExclusiveTypeRector::class,
-        PreferPHPUnitThisCallRector::class,
         InlineIfToExplicitIfRector::class,
         LocallyCalledStaticMethodToNonStaticRector::class,
-        ExplicitBoolCompareRector::class,
         NewlineAfterStatementRector::class,
-        NewlineBeforeNewAssignSetRector::class,
-        CatchExceptionNameMatchingTypeRector::class,
+        PreferPHPUnitThisCallRector::class,
     ]);

@@ -1,14 +1,1 @@
-.cursor
-.dockerignore
-.editorconfig
-.env
-.gitattributes
-.github
-.gitignore
-.idea
-Dockerfile
-Makefile
-build
-docker-compose.override.yml
-docker-compose.yml
-vendor
+**

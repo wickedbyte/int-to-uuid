@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+
+jobs:
+  composer:
+    name: Composer Validation Check and Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+      - uses: ./.github/actions/ci-php-command-action
+        with:
+          display: Composer
+          composer_command: composer validate && composer audit
+
+  phpcs:
+    name: PHP_CodeSniffer Code Style Check
+    needs: composer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+      - uses: ./.github/actions/ci-php-command-action
+        with:
+          display: PHP_CodeSniffer
+          cache: build
+          command: php vendor/bin/phpcs --parallel=$(nproc --ignore=2) --report=full
+
+  phpstan:
+    name: PHPStan Static Analysis Check
+    needs: composer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+      - uses: ./.github/actions/ci-php-command-action
+        with:
+          display: PHPStan
+          cache: build/phpstan
+          command: php vendor/bin/phpstan analyze --memory-limit=-1 --verbose --no-progress --no-interaction --no-ansi
+
+  rector:
+    name: Rector Coding Standards Check
+    needs: composer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+      - uses: ./.github/actions/ci-php-command-action
+        with:
+          display: Rector
+          cache: build/rector
+          command: php vendor/bin/rector process --dry-run --no-progress-bar --no-ansi
+
+  linter:
+    name: PHP Syntax Linting - ${{ matrix.php }}
+    needs: composer
+    strategy:
+      matrix:
+        php: [ '8.3', '8.4', '8.5' ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+      - uses: ./.github/actions/ci-php-command-action
+        with:
+          php-version: ${{ matrix.php }}
+          display: PHPUnit
+          cache: build/.phpunit.cache
+          command: php vendor/bin/parallel-lint -j $(nproc --ignore=2) --show-deprecated --exclude vendor --exclude build .
+
+  phpunit:
+    name: PHPUnit Unit Tests - ${{ matrix.php }}
+    needs: composer
+    strategy:
+      matrix:
+        php: [ '8.3', '8.4', '8.5' ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+      - uses: ./.github/actions/ci-php-command-action
+        with:
+          php-version: ${{ matrix.php }}
+          display: PHPUnit
+          cache: build/.phpunit.cache
+          command: php vendor/bin/phpunit --no-progress

@@ -1,0 +1,10 @@
+services:
+  php:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    volumes:
+      - ${SOURCE_DIR:-./}:/app
+    extra_hosts:
+      - host.docker.internal:host-gateway

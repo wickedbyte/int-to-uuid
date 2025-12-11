@@ -29,37 +29,33 @@
     },
     "require": {
         "php": "^8.3",
-        "ramsey/uuid": "^4.7.6"
+        "ramsey/uuid": "^4.9"
     },
     "require-dev": {
         "php-parallel-lint/php-parallel-lint": "^1.4",
-        "phpbench/phpbench": "^1.4.1",
-        "phpstan/phpstan": "^2.1.17",
-        "phpunit/phpunit": "^12.1.6",
-        "rector/rector": "^2.0.16",
-        "wickedbyte/coding-standard": "^1.0.1"
+        "phpbench/phpbench": "^1.4.3",
+        "phpstan/extension-installer": "^1.4.3",
+        "phpstan/phpstan": "^2.1.33",
+        "phpstan/phpstan-phpunit": "^2.0.10",
+        "phpunit/phpunit": "^12.5.2",
+        "rector/rector": "^2.2.14",
+        "wickedbyte/coding-standard": "^1.0.2"
     },
     "scripts": {
-        "lint": "@php vendor/bin/parallel-lint -j $(nproc --ignore=2) --show-deprecated --exclude vendor --exclude build .",
-        "phpcbf": "@php vendor/bin/phpcbf --parallel=$(nproc --ignore=2) --report=full",
-        "phpcs": "@php vendor/bin/phpcs --parallel=$(nproc --ignore=2) --report=full",
-        "phpstan": "@php vendor/bin/phpstan analyze --memory-limit=-1 --verbose",
-        "test": [
-            "@putenv XDEBUG_MODE=off",
-            "@php vendor/bin/phpunit"
-        ],
-        "test-coverage": [
-            "@putenv XDEBUG_MODE=coverage",
-            "@php vendor/bin/phpunit --coverage-html=build/phpunit"
-        ],
-        "rector": "@php vendor/bin/rector process",
-        "rector-dry-run": "@php vendor/bin/rector process --dry-run",
-        "ci": [
-            "@lint",
-            "@phpcs",
-            "@phpstan",
-            "@test",
-            "@php vendor/bin/rector process --dry-run --clear-cache"
-        ]
+      "ci:lint": "@lint --no-progress --no-colors",
+      "ci:paratest": "@paratest --no-progress",
+      "ci:phpcs": "@phpcs",
+      "ci:phpstan": "@phpstan --no-progress --no-interaction --no-ansi",
+      "ci:phpunit": "@php vendor/bin/phpunit --no-interaction --no-progress",
+      "ci:rector-dry-run": "@rector-dry-run --no-progress-bar --no-ansi",
+      "lint": "@php vendor/bin/parallel-lint -j $(nproc --ignore=2) --show-deprecated --exclude vendor --exclude build .",
+      "phpbench": "@php vendor/bin/phpbench run --report=aggregate",
+      "phpcbf": "@php vendor/bin/phpcbf --parallel=$(nproc --ignore=2) --report=full",
+      "phpcs": "@php vendor/bin/phpcs --parallel=$(nproc --ignore=2) --report=full",
+      "phpstan": "@php vendor/bin/phpstan analyze --memory-limit=-1 --verbose",
+      "phpunit": "@php vendor/bin/phpunit",
+      "phpunit-coverage": "@php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-html=build/phpunit",
+      "rector": "@php vendor/bin/rector process",
+      "rector-dry-run": "@php vendor/bin/rector process --dry-run"
     }
 }

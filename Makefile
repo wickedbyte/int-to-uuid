@@ -31,20 +31,9 @@ down:
 bash: build
 	@$(app) bash
 
-.PHONY: lint
-lint: build
-	@$(app) composer run-script lint
-
-# Run tests, aliased to "phpunit" for consistency with other tooling targets.
-.PHONY: test phpunit
-phpunit: test
-test: build
-	@$(app) composer run-script test
-
 # Generate HTML PHPUnit test coverage report, aliased to "phpunit-coverage" for consistency with other tooling targets.
-.PHONY: test-coverage phpunit-coverage
-phpunit-coverage: test-coverage
-test-coverage: build
+.PHONY: phpunit-coverage
+phpunit-coverage: build
 	@$(app) composer run-script test-coverage
 
 # Run the PHP development server to serve the HTML test coverage report on port 8000.
@@ -52,30 +41,15 @@ test-coverage: build
 serve-coverage:
 	@docker compose run --rm --publish 8000:80 php php -S 0.0.0.0:80 -t /app/build/phpunit
 
-.PHONY: phpcs
-phpcs: build
-	@$(app) composer run-script phpcs
+.PHONY: lint phpcbf phpcs phpstan phpunit rector rector-dry-run
+lint phpcbf phpcs phpstan phpunit rector rector-dry-run:
+	docker compose run --rm --user=$$(id -u):$$(id -g) php composer run-script "$@"
 
-.PHONY: phpcbf
-phpcbf: build
-	@$(app) composer run-script phpcbf
-
-.PHONY: phpstan
-phpstan: build
-	@$(app) composer run-script phpstan
-
-.PHONY: rector
-rector: build
-	@$(app) composer run-script rector
-
-.PHONY: rector-dry-run
-rector-dry-run: build
-	@$(app) composer run-script rector-dry-run
 
 # Runs all the code quality checks: lint, phpstan, phpcs, and rector-dry-run".
+.NOTPARALLEL: ci
 .PHONY: ci
-ci: build
-	@$(app) composer run-script ci
+ci: lint phpcs phpstan rector-dry-run phpunit
 
 # Runs the automated fixer tools, then run the code quality checks in one go, aliased to "preci".
 .PHONY: pre-ci preci

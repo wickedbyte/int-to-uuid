@@ -6,7 +6,7 @@ namespace WickedByte\Tests\IntToUuid\Fixtures;
 
 final readonly class StringWrapper implements \Stringable
 {
-    public function __construct(private readonly string $value)
+    public function __construct(private string $value)
     {
     }
 
