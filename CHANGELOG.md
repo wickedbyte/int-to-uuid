@@ -7,14 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-03-20
+
 ### Added
 
 - Added CONTRIBUTING.md with development setup and contribution guidelines
 - Added SECURITY.md with vulnerability disclosure policy
 - Added CODE_OF_CONDUCT.md (Contributor Covenant 3.0)
 - Added CHANGELOG.md
-- Added `.prettierignore` and `.env.dist`
-- Added `homepage` and `prefer-stable` to composer.json
+- **Dev:** Added `.prettierignore` and `.env.dist`
+- **Dev:** Added `homepage` and `prefer-stable` to composer.json
 
 ### Changed
 
@@ -30,5 +32,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release
 
-[Unreleased]: https://github.com/wickedbyte/int-to-uuid/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/wickedbyte/int-to-uuid/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/wickedbyte/int-to-uuid/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/wickedbyte/int-to-uuid/releases/tag/v1.0.0
