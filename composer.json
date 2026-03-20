@@ -1,59 +1,79 @@
 {
-    "name": "wickedbyte/int-to-uuid",
-    "description": "Utility for Bidirectional Conversion of Integer Ids to UUIDs",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Andy Snell",
-            "email": "andy@wickedbyte.com"
-        }
-    ],
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true,
-            "phpstan/extension-installer": true
-        }
-    },
-    "autoload": {
-        "psr-4": {
-            "WickedByte\\IntToUuid\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "WickedByte\\Benchmarks\\IntToUuid\\": "benchmarks/",
-            "WickedByte\\Tests\\IntToUuid\\": "tests/"
-        }
-    },
-    "require": {
-        "php": "^8.3",
-        "ramsey/uuid": "^4.9"
-    },
-    "require-dev": {
-        "php-parallel-lint/php-parallel-lint": "^1.4",
-        "phpstan/extension-installer": "^1.4.3",
-        "phpstan/phpstan": "^2.1.33",
-        "phpstan/phpstan-phpunit": "^2.0.10",
-        "phpunit/phpunit": "^12.5.2",
-        "rector/rector": "^2.2.14",
-        "wickedbyte/coding-standard": "^1.0.2"
-    },
-    "scripts": {
-      "ci:lint": "@lint --no-progress --no-colors",
-      "ci:paratest": "@paratest --no-progress",
-      "ci:phpcs": "@phpcs",
-      "ci:phpstan": "@phpstan --no-progress --no-interaction --no-ansi",
-      "ci:phpunit": "@php vendor/bin/phpunit --no-interaction --no-progress",
-      "ci:rector-dry-run": "@rector-dry-run --no-progress-bar --no-ansi",
-      "lint": "@php vendor/bin/parallel-lint -j $(nproc --ignore=2) --show-deprecated --exclude vendor --exclude build .",
-      "phpcbf": "@php vendor/bin/phpcbf --parallel=$(nproc --ignore=2) --report=full",
-      "phpcs": "@php vendor/bin/phpcs --parallel=$(nproc --ignore=2) --report=full",
-      "phpstan": "@php vendor/bin/phpstan analyze --memory-limit=-1 --verbose",
-      "phpunit": "@php vendor/bin/phpunit",
-      "phpunit-coverage": "@php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-html=build/phpunit",
-      "rector": "@php vendor/bin/rector process",
-      "rector-dry-run": "@php vendor/bin/rector process --dry-run"
+  "name": "wickedbyte/int-to-uuid",
+  "description": "Utility for Bidirectional Conversion of Integer Ids to UUIDs",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Andy Snell",
+      "email": "andy@wickedbyte.com"
     }
+  ],
+  "homepage": "https://github.com/wickedbyte/int-to-uuid",
+  "prefer-stable": true,
+  "require": {
+    "php": "^8.3",
+    "ramsey/uuid": "^4.9"
+  },
+  "require-dev": {
+    "php-parallel-lint/php-parallel-lint": "^1.4",
+    "phpstan/extension-installer": "^1.4.3",
+    "phpstan/phpstan": "^2.1.33",
+    "phpstan/phpstan-phpunit": "^2.0.10",
+    "phpunit/phpunit": "^12.5.2",
+    "rector/rector": "^2.2.14",
+    "wickedbyte/coding-standard": "^1.0.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "WickedByte\\IntToUuid\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "WickedByte\\Benchmarks\\IntToUuid\\": "benchmarks/",
+      "WickedByte\\Tests\\IntToUuid\\": "tests/"
+    }
+  },
+  "scripts": {
+    "lint": [
+      "@putenv XDEBUG_MODE=off",
+      "@php vendor/bin/parallel-lint -j $(nproc) --show-deprecated --exclude vendor --exclude build ."
+    ],
+    "phpcbf": [
+      "@putenv XDEBUG_MODE=off",
+      "@php vendor/bin/phpcbf --parallel=$(nproc) --report=full"
+    ],
+    "phpcs": [
+      "@putenv XDEBUG_MODE=off",
+      "@php vendor/bin/phpcs --parallel=$(nproc) --report=full"
+    ],
+    "phpstan": [
+      "@putenv XDEBUG_MODE=off",
+      "@php vendor/bin/phpstan analyze --memory-limit=-1 --verbose"
+    ],
+    "phpunit": [
+      "@putenv XDEBUG_MODE=off",
+      "@php vendor/bin/phpunit"
+    ],
+    "phpunit-coverage": [
+      "@putenv XDEBUG_MODE=coverage",
+      "@php vendor/bin/phpunit --coverage-html=build/phpunit"
+    ],
+    "rector": [
+      "@putenv XDEBUG_MODE=off",
+      "@php vendor/bin/rector process"
+    ],
+    "rector-dry-run": [
+      "@putenv XDEBUG_MODE=off",
+      "@php vendor/bin/rector process --dry-run"
+    ]
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "phpstan/extension-installer": true
+    },
+    "sort-packages": true
+  }
 }

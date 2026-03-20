@@ -10,6 +10,5 @@
     <file>src</file>
     <file>tests</file>
     <file>rector.php</file>
-    <rule ref="WickedByte">
-    </rule>
+    <rule ref="WickedByte"/>
 </ruleset>

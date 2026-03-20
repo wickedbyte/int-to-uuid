@@ -23,6 +23,10 @@ coverage
 !.env.dist
 
 # Ignore boilerplate and development tooling files
+.php-cs-fixer.cache
+.phpstan.cache
+.phpunit.cache
+.rector.cache
 docker-compose.override.yml
 docker-compose.override.yaml
 compose.override.yml
@@ -33,3 +37,15 @@ phpstan-baseline.neon
 phpstan-baseline.php
 phpstan.neon
 phpunit.xml
+
+# Ignore INI Files
+*.ini
+!php-development.ini
+!php-production.ini
+
+# Handle Monorepo and Package Specific Files
+/packages/*/composer.lock
+/packages/*/.local
+/packages/*/build
+/packages/*/vendor
+/packages/framework/storage

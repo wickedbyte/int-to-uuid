@@ -61,7 +61,7 @@ jobs:
     needs: composer
     strategy:
       matrix:
-        php: [ '8.3', '8.4', '8.5' ]
+        php: ["8.3", "8.4", "8.5"]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -78,7 +78,7 @@ jobs:
     needs: composer
     strategy:
       matrix:
-        php: [ '8.3', '8.4', '8.5' ]
+        php: ["8.3", "8.4", "8.5"]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code

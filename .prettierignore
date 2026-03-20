@@ -1,0 +1,10 @@
+##------------------------------------------------------------------------------
+# Prettier Ignore File
+#
+# By default, Prettier will ignore files specified in the root .gitignore file
+# and the .git/ and node_modules/ directories. Only add files here that are
+# not already ignored by Prettier.
+##------------------------------------------------------------------------------
+
+# Ignore Generated Version Control Files
+composer.lock

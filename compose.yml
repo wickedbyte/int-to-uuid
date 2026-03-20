@@ -3,8 +3,17 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+      target: php
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.5-cli}
+        WITH_XDEBUG: ${WITH_XDEBUG:-false}
     platform: linux/amd64
     volumes:
       - ${SOURCE_DIR:-./}:/app
+    env_file:
+      - .env
+    environment:
+      PHP_IDE_CONFIG: "serverName=cli" # Used by PhpStorm for path mapping
+      COMPOSER_AUTH: "${COMPOSER_AUTH:-}" # Set via Makefile when GITHUB_TOKEN is available
     extra_hosts:
       - host.docker.internal:host-gateway

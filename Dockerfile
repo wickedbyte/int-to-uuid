@@ -1,48 +1,71 @@
 # syntax=docker/dockerfile:1
-ARG PHP_VERSION=8.5
-FROM php:${PHP_VERSION}-cli
-WORKDIR /app
-ENV PATH "/app/bin:/app/vendor/bin:/app/build/composer/vendor/bin:$PATH"
-ENV COMPOSER_HOME "/app/build/composer"
+##------------------------------------------------------------------------------
+# PHP Build Stages
+#
+# No local files are COPYed, and are excluded via .dockerignore; all sources
+# come from external stages or volume mounts.
+##------------------------------------------------------------------------------
+
+ARG PHP_VERSION=8.5-cli
+FROM php:${PHP_VERSION} AS php
+ARG WITH_XDEBUG=false
 ARG USER_UID=1000
 ARG USER_GID=1000
+WORKDIR /app
+SHELL ["/bin/bash", "-c"]
+ENV PATH="/app/bin:/app/vendor/bin:/app/build/composer/bin:/home/dev/.composer/bin:$PATH"
+ENV XDEBUG_MODE="off"
 
-RUN <<-EOF
-  groupadd --gid ${USER_GID} dev;
-  useradd --system --create-home --uid ${USER_UID} --gid ${USER_GID} --shell /bin/bash dev;
-  apt-get update;
-  apt-get install -y --no-install-recommends \
-    curl \
+# Create a non-root user to run the application
+RUN groupadd --gid $USER_GID dev \
+    && useradd --uid $USER_UID --gid $USER_GID --groups www-data --create-home --shell /bin/bash dev
+
+# Update the package list and install the latest version of the packages
+RUN --mount=type=cache,target=/var/lib/apt,sharing=locked apt-get update && apt-get dist-upgrade --yes
+
+RUN --mount=type=cache,target=/var/lib/apt,sharing=locked apt-get install --yes --quiet --no-install-recommends \
     git \
-    less \
-    libgmp-dev \
     libzip-dev \
     unzip \
-    vim-tiny \
-    zip \
-    zlib1g-dev;
-  apt-get clean;
-EOF
+  && docker-php-ext-install zip \
+  && cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-COPY --link --from=ghcr.io/php/pie:bin /pie /usr/bin/pie
-COPY --link --from=composer /usr/bin/composer /usr/local/bin/composer
-COPY --link --from=composer /tmp/* /home/dev/.composer/
+COPY --from=ghcr.io/php/pie:bin /pie /usr/bin/pie
 
-RUN docker-php-ext-install zip
-RUN pie install xdebug/xdebug
+RUN if [ "${WITH_XDEBUG}" != "false" ]; then \
+    pie install xdebug/xdebug; \
+else \
+    echo 'Skipping Installation of the Xdebug Extension...'; \
+fi
 
-RUN <<EOF > /usr/local/etc/php/conf.d/settings.ini
-memory_limit=1G
-assert.exception=1
-error_reporting=E_ALL
-display_errors=1
-log_errors=on
-xdebug.log_level=0
-xdebug.mode=debug
-xdebug.client_host=host.docker.internal
-xdebug.start_with_request=trigger
-xdebug.idekey=PHPSTORM
-xdebug.output_dir=/app/build/xdebug
-EOF
+RUN <<-'OUTER'
+  set -eux
+  mkdir -p "/home/dev/.composer";
+  chown -R "dev:dev" "/home/dev/.composer";
+  cat <<-'INNER' > /usr/local/etc/php/conf.d/settings.ini
+      memory_limit=1G
+      assert.exception=1
+      error_reporting=E_ALL
+      display_errors=1
+      log_errors=on
+      xdebug.log_level=0
+      xdebug.mode=off
+  INNER
+OUTER
+
+COPY --link --from=composer/composer /usr/bin/composer /usr/local/bin/composer
+COPY --link --chown=$USER_UID:$USER_GID --from=composer/composer /tmp/* /home/dev/.composer/
 
 USER dev
+
+##------------------------------------------------------------------------------
+# Utility Build Stages
+##------------------------------------------------------------------------------
+
+# Prettier Image for Code Formatting
+FROM node:alpine AS prettier
+ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
+ENV PATH=$PATH:/home/node/.npm-global/bin
+WORKDIR /app
+RUN npm install --global --save-dev --save-exact npm@latest prettier
+ENTRYPOINT ["prettier"]
