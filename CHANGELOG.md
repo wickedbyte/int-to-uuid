@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Added tests covering the Test Vectors from the [IntToUuid](https://github.com/wickedbyte/int-to-uuid-spec) specification
+
+### Changed
+- Updated README.md to reflect the new test vectors
+- Added `keywords` to composer.json for improved Packagist discoverability
+
 ## [1.0.1] - 2026-03-20
 
 ### Added

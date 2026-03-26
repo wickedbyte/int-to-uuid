@@ -10,6 +10,16 @@
     }
   ],
   "homepage": "https://github.com/wickedbyte/int-to-uuid",
+  "keywords": [
+    "uuid",
+    "rfc9562",
+    "rfc4122",
+    "id-encoding",
+    "id-obfuscation",
+    "uuid-encoding",
+    "uuid-obfuscation",
+    "primary-key"
+  ],
   "prefer-stable": true,
   "require": {
     "php": "^8.3",
