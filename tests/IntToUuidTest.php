@@ -142,6 +142,7 @@ final class IntToUuidTest extends TestCase
 
         $test_vectors = (array)\json_decode($test_vectors, true, flags: \JSON_THROW_ON_ERROR);
 
+        /** @var array<array{id:int, namespace:int, uuid:string}> $test_vectors */
         foreach ($test_vectors as $test_vector) {
             yield [...$test_vector];
         }
