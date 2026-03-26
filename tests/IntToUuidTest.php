@@ -41,6 +41,8 @@ final class IntToUuidTest extends TestCase
         '772e5800-40be-84d4-9567-09899746d872',
     ];
 
+    private const string TEST_VECTOR_FILE = __DIR__ . '/Fixtures/test-vectors.json';
+
     #[Test]
     #[DataProvider('providesIntegerAndNamespaceIds')]
     public function itCanEncodeAndDecode64BitIntIntoUuid(int $id, int $namespace): void
@@ -109,6 +111,39 @@ final class IntToUuidTest extends TestCase
             yield [Uuid::fromString($uuid)];
             yield [$uuid];
             yield [new StringWrapper($uuid)];
+        }
+    }
+
+    #[Test]
+    #[DataProvider('providesSpecificationTestVectors')]
+    public function validatesAgainstSpecificationTestVectors(
+        int $id,
+        int $namespace,
+        string $uuid,
+    ): void {
+        // Validate converting from integer to uuid matches the test vector
+        $output = IntToUuid::encode(IntegerId::make($id, $namespace));
+        self::assertSame($uuid, (string)$output);
+
+        // Validate converting from uuid to integer matches the test vector
+        $output = IntToUuid::decode($uuid);
+        self::assertSame($id, $output->value);
+        self::assertSame($namespace, $output->namespace);
+    }
+
+    /**
+     * @return Generator<array{id:int, namespace:int, uuid:string}>
+     */
+    public static function providesSpecificationTestVectors(): Generator
+    {
+        $test_vectors = \file_get_contents(self::TEST_VECTOR_FILE) ?: throw new \RuntimeException(
+            'Failed to load test vectors',
+        );
+
+        $test_vectors = (array)\json_decode($test_vectors, true, flags: \JSON_THROW_ON_ERROR);
+
+        foreach ($test_vectors as $test_vector) {
+            yield [...$test_vector];
         }
     }
 }

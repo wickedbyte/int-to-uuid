@@ -1,0 +1,182 @@
+[
+    {
+        "id": 0,
+        "namespace": 0,
+        "uuid": "5fec6701-fc03-8499-8f91-4168936d858f"
+    },
+    {
+        "id": 1,
+        "namespace": 0,
+        "uuid": "764bb373-b10f-8f8a-b66c-3e7930926aed"
+    },
+    {
+        "id": 0,
+        "namespace": 1,
+        "uuid": "b06454be-e102-87f8-a348-d80b99568ff2"
+    },
+    {
+        "id": 1,
+        "namespace": 1,
+        "uuid": "22cdb468-b863-86d6-afb9-481e9df6cd53"
+    },
+    {
+        "id": 2,
+        "namespace": 0,
+        "uuid": "d3162c0a-1529-89ed-a19f-0793f955d3da"
+    },
+    {
+        "id": 10,
+        "namespace": 0,
+        "uuid": "e73a6fb1-0bbf-8d27-8fae-23961165b446"
+    },
+    {
+        "id": 42,
+        "namespace": 0,
+        "uuid": "99c45a05-a33b-8544-8024-f4be69401069"
+    },
+    {
+        "id": 100,
+        "namespace": 0,
+        "uuid": "05f7c1b1-f4c6-8779-8dfa-68ea5169967a"
+    },
+    {
+        "id": 255,
+        "namespace": 0,
+        "uuid": "b42736ec-ecbe-808b-b44d-443e30d92215"
+    },
+    {
+        "id": 256,
+        "namespace": 0,
+        "uuid": "422d289a-e2d9-8464-826f-9632bed9cf80"
+    },
+    {
+        "id": 1000,
+        "namespace": 0,
+        "uuid": "51763062-68bf-8c4c-8c2e-b94bc694ad81"
+    },
+    {
+        "id": 65535,
+        "namespace": 0,
+        "uuid": "2d69cd93-4d99-8e94-9c1a-046c899c24d1"
+    },
+    {
+        "id": 1,
+        "namespace": 2,
+        "uuid": "4c0e091e-3123-8646-9a5c-da6c0a4d0534"
+    },
+    {
+        "id": 1,
+        "namespace": 100,
+        "uuid": "0f2503af-a932-8e6b-9c55-4c8df212c6c1"
+    },
+    {
+        "id": 1,
+        "namespace": 255,
+        "uuid": "5e2ca316-ead3-83ea-9152-06659d2d54cb"
+    },
+    {
+        "id": 1,
+        "namespace": 65535,
+        "uuid": "0a4a2e43-ff0e-8383-af12-e5597447ed20"
+    },
+    {
+        "id": 1,
+        "namespace": 1000000,
+        "uuid": "a9e4d1e3-6df6-8f3a-836d-1e56db53cccd"
+    },
+    {
+        "id": 12,
+        "namespace": 0,
+        "uuid": "c81f423b-2ca0-8963-aefa-f067a191123f"
+    },
+    {
+        "id": 42,
+        "namespace": 12,
+        "uuid": "dee5e9d2-c3e4-8273-b0d5-b3b5307bf749"
+    },
+    {
+        "id": 100,
+        "namespace": 200,
+        "uuid": "94cf7b60-09f0-814e-9305-37f7eb693984"
+    },
+    {
+        "id": 12345,
+        "namespace": 6789,
+        "uuid": "d5deff2c-1aca-8da8-9bb6-0e05d4f2dea6"
+    },
+    {
+        "id": 999999,
+        "namespace": 999999,
+        "uuid": "f2648a6c-3df9-84e4-afe1-0dd5633d5d7e"
+    },
+    {
+        "id": 2147483647,
+        "namespace": 0,
+        "uuid": "fce9e64f-576e-8f75-8ca5-d2679725ba9f"
+    },
+    {
+        "id": 2147483648,
+        "namespace": 0,
+        "uuid": "96c28777-fb80-8b44-8f3a-58f41da7dab9"
+    },
+    {
+        "id": 4294967295,
+        "namespace": 0,
+        "uuid": "f42237ec-018c-83f2-af4d-bf0034f41734"
+    },
+    {
+        "id": 4294967296,
+        "namespace": 0,
+        "uuid": "ef80231a-3165-8468-b04e-21869ead8e1f"
+    },
+    {
+        "id": 1000000,
+        "namespace": 0,
+        "uuid": "0c4b6717-2df3-88b2-b0c2-32cd92760377"
+    },
+    {
+        "id": 1000000000,
+        "namespace": 0,
+        "uuid": "2e07e8e9-3f04-8c17-bdaf-266326b01b0a"
+    },
+    {
+        "id": 9223372036854775807,
+        "namespace": 0,
+        "uuid": "977507dc-c58c-8cc5-b9f9-1b7bc1e798c2"
+    },
+    {
+        "id": 0,
+        "namespace": 4294967295,
+        "uuid": "6d5fa5ad-754f-8082-ada3-61de1b09aa35"
+    },
+    {
+        "id": 1,
+        "namespace": 4294967295,
+        "uuid": "36354b02-3ed5-829b-9616-aef9c7a135d9"
+    },
+    {
+        "id": 4294967295,
+        "namespace": 4294967295,
+        "uuid": "08c906ac-bb85-8843-a4fa-8e015c174532"
+    },
+    {
+        "id": 9223372036854775807,
+        "namespace": 4294967295,
+        "uuid": "019e07d3-805d-88a4-ba7f-9ce33620cdff"
+    },
+    {
+        "id": 42,
+        "namespace": 2147483647,
+        "uuid": "63133744-f68d-8e67-8870-946b4d157ee3"
+    },
+    {
+        "id": 42,
+        "namespace": 2147483648,
+        "uuid": "f01330f6-3ec8-8a67-91fd-1639930088c6"
+    },
+    {
+        "id": 42,
+        "namespace": 4294967295,
+        "uuid": "20d66b23-150b-8c66-9b1c-f8f7d9212bd7"
+    }
+]
