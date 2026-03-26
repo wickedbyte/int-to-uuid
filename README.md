@@ -1,10 +1,13 @@
-# Integer ID To RFC 4122 UUID Converter
+# IntToUuid: Integer ID To RFC 9562 UUID Converter
+
+> **Note:** This is the reference implementation of the
+> [IntToUuid](https://github.com/wickedbyte/int-to-uuid-spec) specification.
 
 Bidirectionally encodes a non-negative 64-bit unsigned "id" integer and optional
 32-bit "namespace" integer into a valid
-[RFC 4122](https://www.rfc-editor.org/rfc/rfc4122) UUID, with the internet-draft
-[Version 8](https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis-00#section-5.8)
-format. The id and namespace integers are encoded to obscure their value and
+[RFC 9562](https://www.rfc-editor.org/rfc/rfc9562)
+[Version 8](https://www.rfc-editor.org/rfc/rfc9562#section-5.8)
+UUID. The id and namespace integers are encoded to obscure their value and
 produce non-sequential UUIDs, while guaranteeing uniqueness and reproducibility.
 
 This could be used to present an auto-incrementing integer "database id" as a
@@ -28,7 +31,7 @@ scope of this library.
 ```php
 $id = \WickedByte\IntToUuid\IntegerId::make(12);
 $uuid = \WickedByte\IntToUuid\IntToUuid::encode($id);
-echo $uuid->toString(); // 14228ed0-822c-8d5d-b9c3-30d2a75c0e10
+echo $uuid->toString(); // c81f423b-2ca0-8963-aefa-f067a191123f
 ```
 
 #### Encode ID with Namespace to UUID
@@ -36,13 +39,13 @@ echo $uuid->toString(); // 14228ed0-822c-8d5d-b9c3-30d2a75c0e10
 ```php
 $id = \WickedByte\IntToUuid\IntegerId::make(42, 12);
 $uuid = \WickedByte\IntToUuid\IntToUuid::encode($id);
-echo $uuid->toString(); // 97ed98ee-0994-8f79-b993-bcb7a2905968
+echo $uuid->toString(); // dee5e9d2-c3e4-8273-b0d5-b3b5307bf749
 ```
 
 #### Decode UUID to ID and Namespace Integers
 
 ```php
-$uuid = \Ramsey\Uuid\Uuid::fromString('97ed98ee-0994-8f79-b993-bcb7a2905968');
+$uuid = \Ramsey\Uuid\Uuid::fromString('dee5e9d2-c3e4-8273-b0d5-b3b5307bf749');
 $id = \WickedByte\IntToUuid\IntToUuid::decode($uuid);
 echo $id->value; // 42
 echo $id->namespace; // 12
@@ -54,7 +57,7 @@ Encoding an integer uses a deterministic seed based on the xxHash (`xxh3`) hash
 of the concatenated binary strings packed from the id and namespace values. The
 first 32-bits of the hash are used as the contiguous `time_hi_and_version`,
 `clock_seq_hi_and_reserved`, and `clock_seq_low` fields. To comply with the RFC
-4122 Version 8, the seed is multiplexed with the required Version and Variant
+9562 Version 8, the seed is multiplexed with the required Version and Variant
 bits, leaving 26 bits of deterministic "pseudo-randomness". The encoded id is
 the id integer packed as a 64-bit binary string XOR the xxHash hash of the
 namespace and seed. The encoded namespace is the namespace integer packed as a
@@ -71,7 +74,7 @@ not encode valid information, and an exception is thrown. An exception is also
 thrown if the UUID passed into the decode function is not a valid Version 8
 UUID.
 
-#### RFC 4122 UUID Field Names and Bit Layout
+#### RFC 9562 UUID Field Names and Bit Layout
 
 ```
  0                   1                   2                   3
@@ -103,9 +106,13 @@ UUID.
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ```
 
-### Why RFC 4122 Version 8?
+### Why RFC 9562 Version 8?
 
-The other UUID versions defined by RFC 4122 have distinct generation algorithms
+> Note: RFC 9562 incorporates and obsoletes the more well-known UUID specification,
+> [RFC 9562](https://www.rfc-editor.org/rfc/rfc9562). It is common to see "on spec"
+> UUIDs referred by either RFC 9562 or RFC 4122.
+
+The other UUID versions defined by RFC 9562 have distinct generation algorithms
 and properties. Versions 1, 2, 6, and 7 are based on the current timestamp.
 Version 3 (Name-Based MD5) and Version 5 (Name-Based SHA1) are deterministic
 for a string "name" and "namespace" values, but are unidirectional
@@ -116,8 +123,7 @@ UUIDs that _look_ like Version 4 UUIDs, but they would not be technically
 compatible with the RFC definition, or have the expected universal uniqueness
 property.
 
-The proposed Version 8 defines a new, RFC-compatible format for experimental or
-vendor-defined UUIDs. The definition allows for both implementation-specific
-uniqueness and for the embedding of arbitrary information, both of which are key
-to this particular use case. While Version 8 is currently in the IETF review
-process, it is expected to be accepted without significant changes.
+Version 8 defines an RFC-compatible format for experimental or vendor-defined
+UUIDs. The definition allows for both implementation-specific uniqueness and for
+the embedding of arbitrary information, both of which are key to this particular
+use case.
