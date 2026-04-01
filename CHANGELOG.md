@@ -8,15 +8,26 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-04-01
+
 ### Added
 
+- Added `RFC5962_VERSION` and `RFC5962_VARIANT` constants to `IntToUuid`
 - Added tests covering the Test Vectors from
   the [IntToUuid](https://github.com/wickedbyte/int-to-uuid-spec) specification
 
 ### Changed
 
-- Updated README.md to reflect the new test vectors
+- Widened `ramsey/uuid` constraint from `^4.7` to `^4.6`, allowing older minor
+  versions that support V8 UUIDs
+- Updated validation/error messages to reference RFC 9562 instead of RFC 4122
+- Updated README.md to adopt RFC 9562 terminology and reflect the new test vectors
 - Added `keywords` to composer.json for improved Packagist discoverability
+
+### Deprecated
+
+- `IntToUuid::RFC4122_VERSION` — use `IntToUuid::RFC5962_VERSION` instead
+- `IntToUuid::RFC4122_VARIANT` — use `IntToUuid::RFC5962_VARIANT` instead
 
 ## [1.0.1] - 2026-03-20
 
@@ -45,6 +56,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Initial release
 
-[Unreleased]: https://github.com/wickedbyte/int-to-uuid/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/wickedbyte/int-to-uuid/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/wickedbyte/int-to-uuid/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/wickedbyte/int-to-uuid/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/wickedbyte/int-to-uuid/releases/tag/v1.0.0
