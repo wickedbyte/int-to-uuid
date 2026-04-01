@@ -109,7 +109,7 @@ UUID.
 ### Why RFC 9562 Version 8?
 
 > Note: RFC 9562 incorporates and obsoletes the more well-known UUID specification,
-> [RFC 9562](https://www.rfc-editor.org/rfc/rfc9562). It is common to see "on spec"
+> [RFC 4122](https://www.rfc-editor.org/rfc/rfc4122). It is common to see "on spec"
 > UUIDs referred by either RFC 9562 or RFC 4122.
 
 The other UUID versions defined by RFC 9562 have distinct generation algorithms
