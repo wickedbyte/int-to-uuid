@@ -18,11 +18,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- Widened `ramsey/uuid` constraint from `^4.7` to `^4.6`, allowing older minor
+- Widened `ramsey/uuid` constraint from `^4.9` to `^4.6`, allowing older minor
   versions that support V8 UUIDs
 - Updated validation/error messages to reference RFC 9562 instead of RFC 4122
 - Updated README.md to adopt RFC 9562 terminology and reflect the new test vectors
 - Added `keywords` to composer.json for improved Packagist discoverability
+- Docs: Update PHP_CodeSniffer repository link in CONTRIBUTING.md
 
 ### Deprecated
 
