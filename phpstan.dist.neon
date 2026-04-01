@@ -6,3 +6,4 @@ parameters:
         - tests
 
     reportUnmatchedIgnoredErrors: false
+    treatPhpDocTypesAsCertain: false

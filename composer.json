@@ -18,12 +18,13 @@
     "id-obfuscation",
     "uuid-encoding",
     "uuid-obfuscation",
-    "primary-key"
+    "primary-key",
+    "IntToUuid"
   ],
   "prefer-stable": true,
   "require": {
     "php": "^8.3",
-    "ramsey/uuid": "^4.9"
+    "ramsey/uuid": "^4.6"
   },
   "require-dev": {
     "php-parallel-lint/php-parallel-lint": "^1.4",
@@ -41,7 +42,6 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "WickedByte\\Benchmarks\\IntToUuid\\": "benchmarks/",
       "WickedByte\\Tests\\IntToUuid\\": "tests/"
     }
   },
