@@ -52,11 +52,12 @@ final class IntToUuidTest extends TestCase
 
         self::assertMatchesRegularExpression(IntToUuid::VALIDATION_REGEX, (string)$uuid);
         self::assertTrue(Uuid::isValid($uuid->toString()));
+        self::assertSame(IntToUuid::RFC5962_VERSION, $uuid->getVersion());
 
         $fields = $uuid->getFields();
         self::assertInstanceOf(Fields::class, $fields);
-        self::assertSame(IntToUuid::RFC4122_VERSION, $fields->getVersion());
-        self::assertSame(IntToUuid::RFC4122_VARIANT, $fields->getVariant());
+        self::assertSame(IntToUuid::RFC5962_VERSION, $fields->getVersion());
+        self::assertSame(IntToUuid::RFC5962_VARIANT, $fields->getVariant());
 
         self::assertEquals($id, IntToUuid::decode($uuid));
         self::assertEquals($id, IntToUuid::decode($uuid->toString()));
@@ -92,7 +93,7 @@ final class IntToUuidTest extends TestCase
     public function decodeValidatesUuidValue(\Stringable|string $invalid_uuid): void
     {
         $this->expectException(\UnexpectedValueException::class);
-        $this->expectExceptionMessage('UUID Does Not Match Required RFC4122 v8 Format');
+        $this->expectExceptionMessage('Input Does Not Match Required RFC5962 UUIDv8 Format');
         IntToUuid::decode($invalid_uuid);
     }
 

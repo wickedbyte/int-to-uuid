@@ -11,9 +11,15 @@ final readonly class IntToUuid
 {
     public const string VALIDATION_REGEX = '/^[0-9a-f]{8}-[0-9a-f]{4}-8[0-9a-f]{3}-[ab89][0-9a-f]{3}-[0-9a-f]{12}$/';
 
-    public const int RFC4122_VERSION = Uuid::UUID_TYPE_CUSTOM;
+    public const int RFC5962_VERSION = Uuid::UUID_TYPE_CUSTOM;
 
-    public const int RFC4122_VARIANT = Uuid::RFC_4122;
+    public const int RFC5962_VARIANT = Uuid::RFC_4122;
+
+    #[\Deprecated('Use ' . self::class . '::RFC5962_VERSION instead.', since: '1.1.0')]
+    public const int RFC4122_VERSION = self::RFC5962_VERSION;
+
+    #[\Deprecated('Use ' . self::class . '::RFC5962_VARIANT instead.', since: '1.1.0')]
+    public const int RFC4122_VARIANT = self::RFC5962_VARIANT;
 
     private const string INT64_UNSIGNED_BE = 'J';
 
@@ -35,7 +41,7 @@ final readonly class IntToUuid
     {
         $uuid = $uuid instanceof UuidInterface ? $uuid : Uuid::fromString((string)$uuid);
         if (!\preg_match(self::VALIDATION_REGEX, $uuid->toString())) {
-            throw new \UnexpectedValueException('UUID Does Not Match Required RFC4122 v8 Format');
+            throw new \UnexpectedValueException('Input Does Not Match Required RFC5962 UUIDv8 Format');
         }
 
         $bytes = $uuid->getBytes();
