@@ -3,13 +3,15 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+and this project adheres
+to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
 ### Added
 
-- Added tests covering the Test Vectors from the [IntToUuid](https://github.com/wickedbyte/int-to-uuid-spec) specification
+- Added tests covering the Test Vectors from
+  the [IntToUuid](https://github.com/wickedbyte/int-to-uuid-spec) specification
 
 ### Changed
 
@@ -30,10 +32,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Updated LICENSE.md copyright year to 2025-2026
-- **Dev:** Replaced Dockerfile, compose.yml, and Makefile with standardized WickedByte project infrastructure
+- **Dev:** Replaced Dockerfile, compose.yml, and Makefile with standardized
+  WickedByte project infrastructure
 - **Dev:** Standardized composer.json scripts to match other WickedByte projects
 - **Dev:** Simplified phpstan.dist.neon to match standard configuration
-- **Dev:** Aligned rector.php, phpcs.xml, .gitignore, and .editorconfig with project conventions
+- **Dev:** Aligned rector.php, phpcs.xml, .gitignore, and .editorconfig with
+  project conventions
 
 ## [1.0.0] - 2025-07-29
 

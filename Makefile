@@ -44,9 +44,6 @@ BUILD_DIRS = build/.phpunit.cache \
 	build/docker \
 	build/phpstan \
 	build/phpunit \
-	build/psysh/config \
-	build/psysh/data \
-	build/psysh/tmp \
 	build/rector \
 	build/xdebug
 
@@ -126,7 +123,7 @@ serve-coverage:
 
 ##------------------------------------------------------------------------------
 # Prettier Code Formatter for JSON, YAML, HTML, Markdown, and CSS Files
-# Example Usage: `make prettier-check`, `makeprettier-write`
+# Example Usage: `make prettier-check`, `make prettier-write`
 ##------------------------------------------------------------------------------
 
 .PHONY: prettier-%

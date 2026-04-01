@@ -5,9 +5,8 @@
 
 Bidirectionally encodes a non-negative 64-bit unsigned "id" integer and optional
 32-bit "namespace" integer into a valid
-[RFC 9562](https://www.rfc-editor.org/rfc/rfc9562)
-[Version 8](https://www.rfc-editor.org/rfc/rfc9562#section-5.8)
-UUID. The id and namespace integers are encoded to obscure their value and
+[RFC 9562 Version 8 UUID](https://www.rfc-editor.org/rfc/rfc9562#section-5.8).
+The id and namespace integers are encoded to obscure their value and
 produce non-sequential UUIDs, while guaranteeing uniqueness and reproducibility.
 
 This could be used to present an auto-incrementing integer "database id" as a
@@ -17,6 +16,13 @@ Since the encoded UUID can be converted back into integer namespace and id
 values at runtime, the UUID does not need to be persisted in the database or
 otherwise indexed to the ID it represents.
 
+In practice, you would want to map namespace values to the different types of
+data that they represent. For example, you might want to use a namespace of `1`
+for a user ID, `2` for a post ID, `3` for a comment ID, and so on. This ensures
+that the UUIDs generated for each type of data are unique within your
+application. The namespace does not need to be known ahead of time to decode the
+UUID and is returned along with the decoded id value.
+
 **Note:** The integer ID and namespace values are only _encoded_ in the UUID,
 not _encrypted_, and the value can be recovered by a third party with effort.
 This library is intended to support on-demand conversion between an integer and
@@ -24,17 +30,31 @@ a UUID, while mitigating basic "user enumeration attacks". Securely encrypting
 a 64-bit integer in the 122 bits available in a UUID is currently outside the
 scope of this library.
 
-## Usage
+## Requirements
 
-#### Encode ID with Default Namespace (0) to UUID
+- PHP >= 8.3
+- [`ramsey/uuid`](https://github.com/ramsey/uuid) ^4.6
 
-```php
-$id = \WickedByte\IntToUuid\IntegerId::make(12);
-$uuid = \WickedByte\IntToUuid\IntToUuid::encode($id);
-echo $uuid->toString(); // c81f423b-2ca0-8963-aefa-f067a191123f
+## Installation
+
+The preferred method of installation is to
+use [Composer](https://getcomposer.org/):
+
+```bash
+composer require wickedbyte/int-to-uuid
 ```
 
-#### Encode ID with Namespace to UUID
+## Usage
+
+#### Encode Integer ID with Default Namespace to UUID
+
+```php
+$id = \WickedByte\IntToUuid\IntegerId::make(42);
+$uuid = \WickedByte\IntToUuid\IntToUuid::encode($id);
+echo $uuid->toString(); // 99c45a05-a33b-8544-8024-f4be69401069
+```
+
+#### Encode Integer ID with Custom Namespace to UUID
 
 ```php
 $id = \WickedByte\IntToUuid\IntegerId::make(42, 12);
@@ -45,24 +65,34 @@ echo $uuid->toString(); // dee5e9d2-c3e4-8273-b0d5-b3b5307bf749
 #### Decode UUID to ID and Namespace Integers
 
 ```php
+$uuid = \Ramsey\Uuid\Uuid::fromString('99c45a05-a33b-8544-8024-f4be69401069');
+$id = \WickedByte\IntToUuid\IntToUuid::decode($uuid);
+echo $id->value; // 42
+echo $id->namespace; // 0
+
 $uuid = \Ramsey\Uuid\Uuid::fromString('dee5e9d2-c3e4-8273-b0d5-b3b5307bf749');
 $id = \WickedByte\IntToUuid\IntToUuid::decode($uuid);
 echo $id->value; // 42
 echo $id->namespace; // 12
 ```
 
+## Specification
+
+See the full specification at https://github.com/wickedbyte/int-to-uuid-spec
+
 ### Conversion Algorithm
 
-Encoding an integer uses a deterministic seed based on the xxHash (`xxh3`) hash
-of the concatenated binary strings packed from the id and namespace values. The
-first 32-bits of the hash are used as the contiguous `time_hi_and_version`,
-`clock_seq_hi_and_reserved`, and `clock_seq_low` fields. To comply with the RFC
-9562 Version 8, the seed is multiplexed with the required Version and Variant
-bits, leaving 26 bits of deterministic "pseudo-randomness". The encoded id is
-the id integer packed as a 64-bit binary string XOR the xxHash hash of the
-namespace and seed. The encoded namespace is the namespace integer packed as a
-32-bit binary string XOR the xxHash hash of the seed. The resulting octets are
-arranged into a valid UUID and a new `UuidInterface` (from the `ramsey/uuid`
+Encoding an integer uses a deterministic seed based on
+the [xxHash](https://github.com/cyan4973/xxhash) XXH3 hash of the concatenated
+binary strings packed from the id and namespace values. The first 32-bits of the
+hash are used as the contiguous `time_hi_and_version`, `clk_seq_hi_res`, and
+`clock_seq_low` fields. To comply with the RFC 9562 Version 8, the seed is
+multiplexed with the required Version and Variant bits, leaving 26 bits of
+deterministic "pseudo-randomness". The encoded id is the id integer packed as a
+64-bit binary string XOR the xxHash hash of the namespace and seed. The encoded
+namespace is the namespace integer packed as a 32-bit binary string XOR the
+xxHash hash of the seed. The resulting octets are arranged into a valid UUID and
+a new `UuidInterface` (from the [`ramsey/uuid`](https://github.com/ramsey/uuid)
 library) is returned.
 
 Decoding is the reverse of the encoding process: the UUID octets are split into
@@ -74,7 +104,7 @@ not encode valid information, and an exception is thrown. An exception is also
 thrown if the UUID passed into the decode function is not a valid Version 8
 UUID.
 
-#### RFC 9562 UUID Field Names and Bit Layout
+#### RFC 4122 UUID Field Names and Bit Layout
 
 ```
  0                   1                   2                   3
@@ -87,6 +117,22 @@ UUID.
 |clk_seq_hi_res |  clk_seq_low  |          node (0-1)           |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                          node (2-5)                           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+```
+
+#### RFC 9562 UUIDv8 Field Names and Bit Layout
+
+```
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           custom_a                            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|          custom_a             |  ver  |       custom_b        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|var|                       custom_c                            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           custom_c                            |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ```
 
@@ -108,22 +154,40 @@ UUID.
 
 ### Why RFC 9562 Version 8?
 
-> Note: RFC 9562 incorporates and obsoletes the more well-known UUID specification,
-> [RFC 4122](https://www.rfc-editor.org/rfc/rfc4122). It is common to see "on spec"
-> UUIDs referred by either RFC 9562 or RFC 4122.
+> Note: RFC 9562 incorporates and obsoletes the more well-known UUID
+> specification, [RFC 4122](https://www.rfc-editor.org/rfc/rfc4122). It is
+> common to see "on spec" UUIDs referred by either "RFC 9562" or "RFC 4122".
 
-The other UUID versions defined by RFC 9562 have distinct generation algorithms
-and properties. Versions 1, 2, 6, and 7 are based on the current timestamp.
-Version 3 (Name-Based MD5) and Version 5 (Name-Based SHA1) are deterministic
-for a string "name" and "namespace" values, but are unidirectional
+The other UUID versions defined
+by [RFC 9562](https://www.rfc-editor.org/rfc/rfc9562) have distinct generation
+algorithms and properties. Versions 1, 2, 6, and 7 are based on the current
+timestamp. Version 3 (Name-Based MD5) and Version 5 (Name-Based SHA1) are
+deterministic for a string "name" and "namespace" values, but are unidirectional
 because they are based on hash functions. Version 4 (Random) comes the closest
 to fulfilling our needs: 122 of the 128 bits are randomly/pseudo-randomly
 generated. The same algorithm used here _could_ be used to generate encoded
 UUIDs that _look_ like Version 4 UUIDs, but they would not be technically
-compatible with the RFC definition, or have the expected universal uniqueness
+compatible with the RFC definition or have the expected universal uniqueness
 property.
 
 Version 8 defines an RFC-compatible format for experimental or vendor-defined
 UUIDs. The definition allows for both implementation-specific uniqueness and for
 the embedding of arbitrary information, both of which are key to this particular
 use case.
+
+## Contributing
+
+Contributions are welcome, please see [CONTRIBUTING.md](CONTRIBUTING.md) for
+more information, including reporting bugs and creating pull requests.
+
+## Coordinated Disclosure
+
+Keeping user information safe and secure is a top priority, and we welcome the
+contribution of external security researchers. If you believe you've found a
+security issue, please read [SECURITY.md](SECURITY.md) for instructions on
+submitting a vulnerability report.
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE.md](LICENSE.md) for
+details.
